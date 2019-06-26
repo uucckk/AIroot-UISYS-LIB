@@ -1,8 +1,7 @@
 # UI-SYSTEM-RELEASE
 Public for UI-SYSTEM
 # 如何使用
-
-> WINDOWS
+> WINDOWS  
 1. window系统运行uisys.exe  
 2. 从example里面添加一个工程，写法如下：
 
