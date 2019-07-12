@@ -32,7 +32,6 @@ pub example/v1 :80
 ```linux
 $> --help
 ---------------------------------------------
-    --help
     lang Language Setting.
     COMMAND: lang <zh/cn>
 
@@ -154,11 +153,11 @@ $> run a0 https://10.110.10.34:80
   The [a2] starting at  [https://10.110.10.34:80]
   WEB Server Started At: [10.110.10.34:80]. Use protocol https
 ```
-### 7. <b>shutdown</b> 
+### 7. <b>stop</b> 
 停止服务 
-- 命令格式: shutdown \<Service Name>
+- 命令格式: stop \<Service Name>
 ```linux
-$> shutdown a0
+$> stop a0
 ---------------------------------------------
   a0 Stop [a0]
   status: [:80]http: Server closed.
