@@ -1,5 +1,5 @@
-# UI-SYSTEM-RELEASE
-Public for UI-SYSTEM
+# UI-SYSTEM-LIB
+Library for UI-SYSTEM
 # 说明
 - UI-SYSTEM 是一套轻巧、高性能、静态前端系统，可以快速构建稳健的WEB服务。  
 整套系统采用了混合式的开发思想，即“选择合适的技术做擅长的事，各尽其职，优势融合”。  
