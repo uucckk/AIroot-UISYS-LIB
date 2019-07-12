@@ -1,0 +1,75 @@
+<!-- 
+	类注释
+	@author sunxy
+	@version 0.0
+ -->
+<@import value="component.*" />
+<@import value="zs.*" />
+<desktop>
+	<style>
+		*{
+			transition:all .3s ease;
+		}
+		#header{
+			background-color:#ffffff;
+		}
+		
+		#header ul{
+			margin-top:20px;
+			margin-right:20px;
+		}
+		
+		#header li{
+			float:left;
+			list-style:none;
+			margin-right:10px;
+		}
+	</style>
+	<hbox id="header" width="100%" height="60">
+		<div width="400" height="100%" style="font-family:Microsoft YaHei;font-size:32px;font-weight:bold;margin:10px 0px 0px 15px;">Hytera Library Manager</div>
+		<div width="100%" height="100%">
+			<ul style="float:right;">
+				<li>HOME</li>
+				<li>ABOUT</li>
+				<li>EDIT</li>
+				<li>SERVICE</li>
+			</ul>
+		</div>
+	</hbox>
+	<position width="100%" height="100%">
+		<td id="plt" width="100%" height="100%">
+			<box data="0,0,2,0,2,2,0,2" depth="10" x="-1" y="0" z="1" color="#ffaa00"/>
+			<box data="-30,-20,20,-20,20,20,-30,20" depth="15" x="-1" y="0" z="1" color="#ffffff"/>
+			<box data="-25,-20,20,-20,20,20,-25,20" depth="5" x="-1" y="15" z="1" color="#00aaff"/>
+			<box data="-30,-20,20,-20,20,20,-30,20" depth="10" x="-1" y="20" z="1" color="#ffffff"/>
+			<line data="0,0,2,0,2,2,0,2" depth="10" x="-1" y="0" z="1" color="#ffaa00"/>
+			<text />
+		</td>
+		<LeftLabel />
+		<RightLabel right="25" top="10" />
+	</position>
+	
+	<script>
+		import js/jquery.jus.js;
+		import zs.Box;
+		import zs.Text;
+		function init(){
+			for(var i:int = 0;i<50;i++){
+				var box = new Box();
+				box.data = "0,0,8,0,8,8,0,8";
+				box.color = 0xffffff;
+				box.x = -90 + 180*Math.random();
+				box.z = -90 + 180*Math.random();
+				box.depth = 20 * Math.random();
+				plt.addChild(box);
+				var txt = new Text();
+				txt.text = "Library " + i;
+				txt.x = box.x;
+				txt.y = box.depth;
+				txt.z = box.z;
+				plt.addChild(txt);
+			}
+			
+		}
+	</script>
+</desktop>
