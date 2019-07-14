@@ -20,7 +20,8 @@ Library for UI-SYSTEM
 其中:80是开启服务的端口好，也可以指定发布地址，如127.0.0.1:80  
 3. 打开chrome浏览器，输入：http://127.0.0.1/
 - <b>方式2</b>  
-1. 直接将工程目录拖动到uisys.exe图标上。  
+1. 也可以直接将您的工程目录拖动到uisys.exe图标上。  
+![conv_ops](README/img/dragstart.gif)
 2. 确保弹出的控制台没有端口占用错误错误。
 3. 打开chrome浏览器，输入：http://127.0.0.1/
 > LINUX 和 CENTOS
@@ -308,36 +309,68 @@ Exit.
 
 
 ## 项目参数设置
+### 1. <b>ctp</b> 
+create project dir.
+创建一个UI交互工程目录，ctp 是 <b style='color:#aa0000'>c</b>rea<b style='color:#aa0000'>t</b>e <b style='color:#aa0000'>p</b>roject 的缩写。 
+COMMAND: ctp \<Project Path>
+命令格式：ctp \<项目路径>  
+说明：被创建的工程平台会直接帮您挂在到一个临时服务节点上。
+```linux
+$> ctp D:\uisys\project01
+---------------------------------------------
+  create project [D:\uisys\project01].
 
-1. ctp create project dir.
-COMMAND: ctp <Project Path>
-For Example:ctp C:/jus/project/
+  The [a0] added successfully.
+  The [a0] setted in [D:\uisys\project01].
+  The project mount at[a0] server.
+```
 
-2. stp set project dir.
-COMMAND: stp <Service Name> <Project Path>
-For Example:stp test C:/jus/project/
+### 2. <b>stp</b> 
+set project dir.  
+重新设置一个服务节点的工程目录,stp 是 <b style='color:#aa0000'>s</b>e<b style='color:#aa0000'>t</b> <b style='color:#aa0000'>p</b>roject 的缩写。   
+COMMAND: stp \<Service Name> <Project Path>
+例如，如果平台已有一个服务节点a0，可以重新让其指向"D:\uisys\project01"的路径。  
+```linux
+$> stp a0 D:\uisys\project01
+---------------------------------------------
+  The [a0] setted in [D:\uisys\project01].
+```
 
-3. ctf create module file.
-COMMAND: ctf [-Create Method(-h|m|s|r)] <Service Name> <Project Path>
+### 3. <b>ctf</b>
+create module file.  
+COMMAND: ctf [-Create Method(-h|m|s|r)] \<Service Name> <Project Path>
 For Example:ctf test component.Test
 ctf test -hr component.Test
 
-4. release release project.
-COMMAND: release <Service Name> [Project Path]
-For Example:release test C:/jus/project/
+### 4. <b>release</b>  
+release project.
+发布工程为原生工程，以便其他服务器可以使用。  
+COMMAND: release \<Service Name> [Project Path]  
+```linux
+$> release a0 D:\uisys\project-release\
+---------------------------------------------
+  ----Release Complete----
+```
+### 5. <b>send</b> 
+push data to Service by websocket.  
+通过UI-System自建的websocket数据服务，推送数据到WEB客户端。  
+COMMAND: send \<Service Name> \<User ID> \<UUID> \<Value>
 
+### 6. <b>lw</b> 
+display websocket list of Service  
+查看服务节点提供的websocket服务被多少个WEB客户端连接。  
+COMMAND: lw \<Service Name> [-h]
 
-5. send push data to Service by websocket.
-COMMAND: send <Service Name> <User ID> <UUID> <Value>
+### 7. <b>info</b> 
+The project infomation  
+显示项目信息  
+COMMAND: rm \<Service Name>
 
-lw display websocket list of Service
-COMMAND: lw <Service Name> [-h]
+### 8. <b>set</b> 
+Set project attributes.  
+设置WEB工程的属性  
+COMMAND: set \<Service Name> \<AttributeName> \<Value> [Value...]
 
-6. info The project infomation
-COMMAND: rm <Service Name>
-
-7. set Set project attributes.
-COMMAND: set <Service Name> <AttributeName> <Value> [Value...]
-
-10. ret Remove project attributes.
-COMMAND: set <Service Name> <AttributeName>
+### 9. <b>ret</b> 
+Remove project attributes.  
+COMMAND: ret \<Service Name> \<AttributeName>
