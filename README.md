@@ -1,5 +1,6 @@
+| [中文](doc/zh_CN/index.md) | [English](doc/en_US/index.md) | [日语](doc/jp_CH/index.md) |
 # UI-SYSTEM-LIB
-Library for UI-SYSTEM
+UI-SYSTEM 的官方库项目
 # 说明
 - UI-SYSTEM 是一套轻巧、高性能、静态前端系统，可以快速构建稳健的WEB服务。  
 整套系统采用了混合式的开发思想，即“选择合适的技术做擅长的事，各尽其职，优势融合”。  
@@ -10,7 +11,7 @@ Library for UI-SYSTEM
 # 如何使用
 > WINDOWS  
 
-- <b>方式1</b> 
+- **方式1** 
 1. window系统运行uisys.exe  
 2. 从example里面添加一个工程，写法如下：
 
@@ -19,9 +20,9 @@ Library for UI-SYSTEM
   ```
 其中:80是开启服务的端口好，也可以指定发布地址，如127.0.0.1:80  
 3. 打开chrome浏览器，输入：http://127.0.0.1/
-- <b>方式2</b>  
+- **方式2**   
 1. 也可以直接将您的工程目录拖动到uisys.exe图标上。  
-![conv_ops](README/img/dragstart.gif)
+![conv_ops](doc/img/dragstart.gif)
 2. 确保弹出的控制台没有端口占用错误错误。
 3. 打开chrome浏览器，输入：http://127.0.0.1/
 > LINUX 和 CENTOS
@@ -30,6 +31,16 @@ Library for UI-SYSTEM
 
 > ARM
 
+# 服务运行方式
+UI-SYS 的服务节点运行方式，默认是以 开发(Development) 模式运行的，在此模式下，UISYS的WEB SERVER 会对扩展名为\*.ui,\*.es 两种文件进行实时解析，当我们要发布的时候，需要切换到静态发布模式，届时，所有的*.ui,*.es都会变成*.ui.hmtl这样的扩展名。
+如果想了解UISYS的*.ui,*.es扩展名文件的概念可以点击<a href='README/module.md'>这里</a>。
+静态模式命令如下：
+```linux
+$> pub example/v1 :80 -s
+```
+命令的格式是在原有格式后加上 -s 即可（-s 代表 static）。
+
+我们介绍下 UISYS 平台的基本命令，包括<b>服务控制命令</b>和<b>项目参数设置</b>命令。
 # 命令解析
 ## 服务控制命令
 ### 1. <b>help</b>  
