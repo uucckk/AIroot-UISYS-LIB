@@ -13,7 +13,6 @@ Library for UI-SYSTEM
 # 如何使用
 > WINDOWS  
 
-- <b>方式1</b> 
 - **Method 1**  
 1.run uisys.exe in windows  
 2.add a project to example, like below :
