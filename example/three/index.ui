@@ -26,7 +26,7 @@
 		}
 	</style>
 	<hbox id="header" width="100%" height="60">
-		<div width="400" height="100%" style="font-family:Microsoft YaHei;font-size:32px;font-weight:bold;margin:10px 0px 0px 15px;">Hytera Library Manager</div>
+		<div width="400" height="100%" style="font-family:Microsoft YaHei;font-size:32px;font-weight:bold;margin:10px 0px 0px 15px;">AIroot Library Manager</div>
 		<div width="100%" height="100%">
 			<ul style="float:right;">
 				<li>HOME</li>
