@@ -7,6 +7,7 @@
 *.rc
 *.syso
 *.rar
+*.zip
 /superico.ico
 
 # Test binary, build with `go test -c`
@@ -16,7 +17,5 @@
 *.out
 
 #dir
-/pkg/*
-/uisys/example/*
-/uisys/boot.conf
+
 
