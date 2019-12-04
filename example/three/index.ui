@@ -48,7 +48,6 @@
 		<LeftLabel />
 		<RightLabel right="25" top="10" />
 	</position>
-	
 	<script>
 		import zs.Box;
 		import zs.Text;
@@ -67,8 +66,7 @@
 				txt.y = box.depth;
 				txt.z = box.z;
 				plt.addChild(txt);
-			}
-			
+			}	
 		}
 	</script>
 </desktop>
