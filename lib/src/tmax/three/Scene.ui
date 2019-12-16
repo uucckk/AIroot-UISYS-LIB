@@ -1,0 +1,196 @@
+<!-- 
+	展示 
+	@type TMAX
+-->
+<div>
+	<div id="container"></div>
+	<@content to="ct" />
+	<script>
+		import @root/js/jquery.min.js;
+		import @root/js/three/three.js;
+		import @root/js/three/controls/OrbitControls.js;
+		
+		
+		private var _self = $(dom);
+		private var renderer, stats, scene, _camera,_control;
+		private var grid,axis;
+		private var container = null;
+		private var group = null;
+		private var ct = [];
+		private var enterframeFc = [];
+		function init() {
+			container = document.getElementById( '$container' );
+			scene = new ? THREE.Scene();
+			_camera = new ? THREE.PerspectiveCamera( 50, _self.width() / _self.height(), 1, 1000 );
+			_camera.position.set( 0, 0, 10 );
+			window.camera = _camera;
+			if(dom.getAttribute("gridhelper") != "false" || dom.getAttribute("axishelper") != "false"){
+				this.group = new ? THREE.Group();
+				//group.castShadow = true;
+				scene.add( group );
+				if(dom.getAttribute("gridhelper") != "false"){
+					grid = new ? THREE.GridHelper( 160, 40 );
+					//helper.rotation.x = Math.PI / 2;
+					group.add( grid );
+				}
+				if(dom.getAttribute("axishelper") != "false"){
+					//生成一个坐标轴，辅助线
+					axis = new ? THREE.AxisHelper(100);
+					scene.add(axis);
+				}
+			}
+			
+			//光照
+			var directionalLight = new ? THREE.DirectionalLight(0xffffff, 0.8 );
+			directionalLight.position.set( 0, 100, 10 ).normalize();//之前100,100,100
+			//directionalLight.castShadow = true;
+			scene.add( directionalLight );
+			var ambientLight = new ? THREE.AmbientLight( 0xf0f0ff, 0.7 );
+			//ambientLight.castShadow = true;
+			scene.add( ambientLight );
+			
+			for(var i = 0;i<ct.length;i++){
+				addChild(ct[i]);
+			}
+			
+			
+
+			renderer = new ? THREE.WebGLRenderer( {alpha:true,antialias: true } );
+			//renderer.shadowMapEnabled = true;
+			renderer.setPixelRatio( window.devicePixelRatio );
+			renderer.setSize(_self.width(), _self.height());
+			container.appendChild( renderer.domElement );
+
+			//
+
+			_control = new ? THREE.OrbitControls( _camera, renderer.domElement );
+			//_control.autoRotate = true;
+			//_control.enableDamping = true;
+			window.controls = _control;
+			//
+
+			
+
+			animate();
+			//setInterval(animate,100);
+		}
+		
+		
+		/**
+		 * 是否显示网格线
+		 * @param value	true or false
+		 */
+		public set gridHelper(value){
+			grid.visible = value;
+		}
+		
+		public get gridHelper():boolean{
+			return grid.visible;
+		}
+		
+		
+		/**
+		 * 是否显示坐标辅助线
+		 * @param value	true or false
+		 */
+		public set axisHelper(value){
+			axis.visible = value;
+		}
+		
+		public get axisHelper():boolean{
+			return axis.visible;
+		}
+		
+		/**
+		 * 添加sd对象
+		 * @param obj	3d对象
+		 */
+		public function addChild(obj:3DObject){
+			if(obj.type == "text"){
+				_addText(group,obj);
+			}else if(obj.type == "custom"){
+				_addCustom(group,obj);
+			}else if(obj.type == "content"){
+				_addContent(group,obj);
+			}else{
+				obj.parent = this;
+			}
+		}
+		
+		//获取摄像头
+		public get camera(){
+			return _camera;
+		}
+		
+		//获取窗口控制
+		public get control(){
+			return _control;
+		}
+		
+		
+		
+		
+		/**
+		 * 创建文字标签
+		 */
+		private function _addText(group,obj){
+			initText("仓库",obj);
+
+		}
+		
+
+		
+		
+		private function _addCustom(group, obj){
+			scene.add(obj.mesh);
+		}
+		
+		/**
+		 * 添加容器
+		 */
+		private function _addContent(group,obj){
+			obj.parent = this;
+		}
+		
+		
+		function loadData(value):void{
+			addChild(group,{paths:[],amounts:[4],colors:[0xabcdef],center:{ x: 0, y: 0 }});
+			_addLine(group,{paths:[],amounts:[4],colors:[0xabcdef],center:{ x: 0, y: 0 }});
+		}
+		
+
+		
+	
+		function enterframe(obj:Object,callBack:Function){
+			enterframeFc.push({o:obj,f:callBack});
+		}
+
+		function animate() {
+
+			requestAnimationFrame( animate );
+			render();
+
+		}
+
+		function render() {
+			renderer.render( scene, _camera );
+			_control.update();
+			return;
+			var i = 0;
+			while(i<enterframeFc.length){
+				enterframeFc[i].f();
+				if(enterframeFc[i].o._destroy_){
+					enterframeFc.splice(i,1);
+				}
+				i++;
+			}
+		}
+		
+		public function trigger(event):void{
+			_camera.aspect = _self.width() / _self.height();
+			_camera.updateProjectionMatrix();
+			renderer.setSize(_self.width(), _self.height());
+		}
+
+	</script>
+</div>
