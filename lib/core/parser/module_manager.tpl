@@ -311,7 +311,6 @@ var __FORMAT__ = function(__DATA__,__APPDOMAIN__,module){
 						var isImport = false;
 						var md5 = v.value.substr(1,32)
 						var importStr = v.value.substr(33).trim();
-						console.log('i',importStr)
 						for(var n = 0;n<__PACKAGE_LIST__.length;n++){
 							if(__PACKAGE_LIST__[n].md5 == md5){
 								isImport = true;
@@ -319,7 +318,6 @@ var __FORMAT__ = function(__DATA__,__APPDOMAIN__,module){
 							}
 						}
 						if(!isImport){
-							console.log(importStr)
 							__PACKAGE_LIST__.push({url:importStr,type:"P",md5:md5});
 						}
 					}else if(v.value.charAt(0) == "S"){
@@ -516,69 +514,74 @@ function __InitModule__(__APPDOMAIN__,moduleName,uuid,value,target,append){
 		if(m){
 			__InitBody__(__APPDOMAIN__,uuid,m.html,m.style,target,append);
 			var lst = m.runLst;
-			var p = null;
-			var pn = null;
-			var ct = null;//context or 模块
-			for(var i = 0;i<lst.length;i++){
-				p = lst[i];
-				pn = p.name.replace(/[\b]/g,uuid);
-				if(__OBJECT__[pn] instanceof HTMLElement){__OBJECT__[pn] = {dom:__OBJECT__[pn]};}
-				else if(!__OBJECT__[pn]){__OBJECT__[pn] = {dom:document.getElementById(pn)};};
-				switch(p.type){
-					case "P":
-						param.push(pn,p.value.replace(/[\b]/g,uuid));
-					break;
-					case "X"://Context value
-						ct = {value:p.value};
-					break;
-					case "N"://导入模块
-						if(ct){
-							ct.module = getModule(p.value,__APPDOMAIN__);
-						}else{
-							ct = {module:getModule(p.value,__APPDOMAIN__)};
-						}
-					break;
-					case "S"://执行基本函数
-						if(method[p.value]){
-							method[p.value](pn,uuid,__APPDOMAIN__,ct);
-						}else{
-							trace("S",p.name,p.value);
-						}
-						
-					break;
-					case "E"://执行扩展函数
-						extend[p.value].method(pn,uuid,__APPDOMAIN__,ct);
-					break;
-					case "C"://执行命令函数
-						AddC2C(uuid,p,__APPDOMAIN__)//AddCommandToCompoent
-					break;
-					case "T"://执行外连接函数
-						if(!_MODULE_INNER_[uuid]){
-							_MODULE_INNER_[uuid] = [];
-						}
-						_MODULE_INNER_[uuid].push(__OBJECT__[pn]);
-					break;
-					case "L"://执行外连接函数
-						if(!_MODULE_INNER_[uuid]){
-							_MODULE_INNER_[uuid] = [];
-						}
-						_MODULE_INNER_[uuid].push(eval(p.value.replace(/[\b]/g,uuid))());
-					break;
-					case "Q":
-						ct = null;
-					break;
+			if(lst.length>0){
+				var p = null;
+				var pn = null;
+				var ct = null;//context or 模块
+				for(var i = 0;i<lst.length;i++){
+					p = lst[i];
+					pn = p.name.replace(/[\b]/g,uuid);
+					if(__OBJECT__[pn] instanceof HTMLElement){__OBJECT__[pn] = {dom:__OBJECT__[pn]};}
+					else if(!__OBJECT__[pn]){__OBJECT__[pn] = {dom:document.getElementById(pn)};};
+					switch(p.type){
+						case "P":
+							param.push(pn,p.value.replace(/[\b]/g,uuid));
+						break;
+						case "X"://Context value
+							ct = {value:p.value};
+						break;
+						case "N"://导入模块
+							if(ct){
+								ct.module = getModule(p.value,__APPDOMAIN__);
+							}else{
+								ct = {module:getModule(p.value,__APPDOMAIN__)};
+							}
+						break;
+						case "S"://执行基本函数
+							if(method[p.value]){
+								method[p.value](pn,uuid,__APPDOMAIN__,ct);
+							}else{
+								trace("S",p.name,p.value);
+							}
+							
+						break;
+						case "E"://执行扩展函数
+							extend[p.value].method(pn,uuid,__APPDOMAIN__,ct);
+						break;
+						case "C"://执行命令函数
+							AddC2C(uuid,p,__APPDOMAIN__)//AddCommandToCompoent
+						break;
+						case "T"://执行外连接函数
+							if(!_MODULE_INNER_[uuid]){
+								_MODULE_INNER_[uuid] = [];
+							}
+							_MODULE_INNER_[uuid].push(__OBJECT__[pn]);
+						break;
+						case "L"://执行外连接函数
+							if(!_MODULE_INNER_[uuid]){
+								_MODULE_INNER_[uuid] = [];
+							}
+							_MODULE_INNER_[uuid].push(eval(p.value.replace(/[\b]/g,uuid))());
+						break;
+						case "Q":
+							ct = null;
+						break;
+					}
 				}
+				for(var i = 0;i<param.length;i+=2){
+					_MODULE_CONTENT_LIST_ATTR_[param[i]] = eval(param[i+1]);
+				}
+				if(value != undefined){
+					
+					_MODULE_CONTENT_LIST_ATTR_[uuid] = value;
+				}
+				//初始化列表
+				__initLst__(uuid);
+				return __OBJECT__[uuid];
+			}else{
+				return window[uuid];
 			}
-			for(var i = 0;i<param.length;i+=2){
-				_MODULE_CONTENT_LIST_ATTR_[param[i]] = eval(param[i+1]);
-			}
-			if(value != undefined){
-				
-				_MODULE_CONTENT_LIST_ATTR_[uuid] = value;
-			}
-			//初始化列表
-			__initLst__(uuid);
-			return __OBJECT__[uuid];
+			
 		}else{
 			____ERROR____("module: " + moduleName + " isn't exist.");
 		}
@@ -709,6 +712,22 @@ UI.getClass = function(className,appDomain){
 	return _MODULE_CONTENT_LIST_[appDomain][className];
 }
 
+//加载#参数
+UI.loadHash = function(hash,target,module){
+	var th = __Hash__();
+	var url = th[hash];
+	var args = [];
+	var p = null;
+	for(var i = 1;i<arguments.length;i++){
+		p = arguments[i];
+		if(i == 2){
+			p = url ? url : module;
+		}
+		args.push(p);
+	}
+	UI.loadModule.apply(UI,args);
+}
+
 
 UI.loadModule = function(target,module){
 	var value,listener,appDomain;
@@ -734,7 +753,6 @@ UI.loadModule = function(target,module){
 		var data = e.target.data;
 		var uuid = __UUID__();
 		__FORMAT__(data,appDomain,module);
-		Info();
 		__LOAD_PACKAGE__(function(){
 			//执行函数
 			var w =  __InitModule__(appDomain,module,uuid,value,target);
@@ -1038,23 +1056,60 @@ function gcEvt(){
 	__CLEAR_ID__ = setTimeout(__CLEAR_FUNC__,5000);
 }
 
+//查找是否有此实例的模块
+function hasInstance(module,domain){
+	var r = null;
+	for(var j in __MODULE_LIST__){
+		r = __MODULE_LIST__[j];
+		if(module == r.module && domain == r.domain){//说明存在引用
+			return true;
+		}
+	}
+	return false;
+}
+//查询它是否作为依赖
+function hasMain(dep,domain){
+	var result = [];
+	var r = null;
+	for(var k = __MODULE_COUNTER__.length - 1;k>=0;k--){
+		r = __MODULE_COUNTER__[k];
+		if(r.dep == dep && r.domain == domain && r.module != dep){
+			result.push(r.module);
+		}
+	}
+	return result;
+}
+
+//递归查找
+function sdep(c,l){
+	//查找实例化中是否存在
+	if(hasInstance(c,l)){
+		return true;
+	}
+	//如果不存在,查下上级依赖
+	var result = hasMain(c,l);
+	for(var k in result){
+		if(sdep(result[k],l)){
+			return true;
+		}
+	}
+	return false;
+}
 function gcLibEvt(){
 	var c = null;
 	var r = null;
+	
 	for(var l in __MODULE_RUNLIST__){
 		//搜索指定域
 		f:for(var c in __MODULE_RUNLIST__[l]){//域名内的名字
-			for(var j in __MODULE_LIST__){
-				r = __MODULE_LIST__[j];
-				console.log(r);
-				if(c == r.module){//说明存在引用
-					continue f;
-				}
+			if(sdep(c,l)){
+				continue;
 			}
 			delete __MODULE_RUNLIST__[l][c];
 			//说明已经消失
 			for(var k = __MODULE_COUNTER__.length - 1;k>=0;k--){
 				if(__MODULE_COUNTER__[k].module == c){
+					console.log("DELETE_0",l,c,__MODULE_COUNTER__[k]);
 					delete __MODULE_COUNTER__.splice(k,1);
 				}
 			}
@@ -1064,13 +1119,13 @@ function gcLibEvt(){
 	//删除没有关联的库
 	for(var l in __MODULE_METHOD__){
 		//搜索指定域
-		console.log("D",l);
 		f:for(var c in __MODULE_METHOD__[l]){//域名内的名字
 			for(var i in __MODULE_COUNTER__){
-				if(__MODULE_COUNTER__[i].module == c){
+				if(__MODULE_COUNTER__[i].dep == c){
 					continue f;
 				}
 			}
+			console.log("DELETE_1",l,c);
 			delete __MODULE_METHOD__[l][c];
 		}
 	}
