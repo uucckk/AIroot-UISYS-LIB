@@ -8,7 +8,7 @@
 		position:relative;
 	}
 </style>
-<jus.DisplayObject>
+<jus.DisplayObject width="100%" height="100%">
 	<@content />
 </jus.DisplayObject>
 <script>
@@ -128,6 +128,9 @@
 			}
 			if(top == false && bottom === false){
 				$this.css("top","0px");
+			}
+			if(top == false && bottom !== false){
+				$this.css("bottom",$this.attr("bottom") + "px");
 			}
 			var $id = @global[$this.attr("id")];
 			if($id && $id.trigger){
